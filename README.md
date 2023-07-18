@@ -12,7 +12,7 @@ and we made a controller to view it in a jason.
 Take notice:
 you need to downloads packages as microsoft entity framework tool,microsoft entity framework design,microsoft entity framework SQL server.
 ## Digram:
-![diagram](async-inn-erd.png)
+![diagram](https://github.com/abdarahman-shaheen/Async-Inn-lab12/blob/master/async.png)
 
 
 ## Explanation:
