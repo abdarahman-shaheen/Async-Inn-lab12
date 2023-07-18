@@ -14,6 +14,8 @@ namespace Async_Inn
             builder.Services.AddDbContext<HotelDbContext>(options => options.UseSqlServer(connString));
             builder.Services.AddControllers();
 
+
+
             var app = builder.Build();
             app.MapControllers();
 
