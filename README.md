@@ -52,8 +52,14 @@ you need to downloads packages as microsoft entity framework tool,microsoft enti
 - Each room can have multiple amenities (many-to-many relationship): The Amenity entity is related to the Room entity through an associative table.
 ##  Joint Entity Table with Payload Tables:
 the Room_Amenity table serves as a Joint Entity Table with Payload table, consisting of foreign keys that reference the primary keys of the Room and Amenity tables and includes  additional attributes or payload information.
+
 additional attributes:
    - `price`: Price of the room.
    - `pet_friendly`: Indicates whether the room is pet-friendly.
 ##  Pure Joint Tables:
 the Location_Room table serves as a  Pure Joint table, consisting of foreign keys that reference the primary keys of the location  and Room tables and doesnot includes  any additional attributes or payload information.
+
+## Repository Pattern:
+HotelService and RoomService and AmenityService which serves as a centralized data access component following characteristics of the Repository Pattern. Despite being named as a "service," it functions as a repository for (hotel/room/amenity )related data operations. It abstracts the underlying data storage (database) using Entity Framework Core and exposes methods to handle creating, retrieving, updating, and deleting (hotel/room/amenity) data.
+
+The IHotel IRoom IAmenity interfaces serves as a contract that any class representing a (hotel/room/amenity) repository . By defining these methods in the interface, the application can achieve decoupling between the data access layer and the rest of the application, enabling flexible data storage implementations and improving testability and maintainability.
