@@ -38,9 +38,10 @@ namespace Async_Inn.Model.Services
             return await _context.Amenities.ToListAsync();
         }
 
-        public async Task<Amenities> Update(int id)
+        public async Task<Amenities> Update(int id,Amenities updateAmenites)
         {
            var amenty = await GetAmenitieId(id);
+            amenty.Name =updateAmenites.Name;
             _context.Entry(amenty).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return amenty;

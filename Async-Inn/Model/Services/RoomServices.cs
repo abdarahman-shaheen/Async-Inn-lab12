@@ -40,10 +40,13 @@ namespace Async_Inn.Model.Services
             return await _context.Rooms.ToListAsync();
         }
 
-        public async Task<Room> Update(int id)
+        public async Task<Room> Update(int id,Room room)
         {
-            var room =await GetRoomId(id);
+            var Temproom =await GetRoomId(id);
+            Temproom.Layout = room.Layout;
+            Temproom.Name = room.Name;
             _context.Entry(room).State= EntityState.Modified;
+            await _context.SaveChangesAsync();
             return room;
         }
     }
