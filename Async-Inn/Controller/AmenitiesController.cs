@@ -48,7 +48,7 @@ namespace Async_Inn.Controller
             {
                 return BadRequest();
             }
-            return Ok(await Amenety.Update(id)) ;
+            return Ok(await Amenety.Update(id,amenities)) ;
         }
 
         // POST: api/Amenities
@@ -63,8 +63,6 @@ namespace Async_Inn.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAmenities(int id)
         {
-      
-
             return Ok(await Amenety.Delete(id));
         }
 

@@ -50,7 +50,7 @@ namespace Async_Inn.Controller
             }
 
 
-            return Ok(await rooms.Update(id));
+            return Ok(await rooms.Update(id,room));
         }
 
         // POST: api/Rooms
