@@ -35,7 +35,6 @@ namespace Async_Inn.Controller
         [HttpGet("{id}")]
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
-     
             return await rooms.GetRoomId(id);
         }
 
@@ -65,8 +64,21 @@ namespace Async_Inn.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-
             return Ok(await rooms.Delete(id));
+        }
+
+        [HttpPost]
+        [Route("{roomId}/Amenity/{amenityId}")]
+        public async Task<RoomAmeneties> PostRoomaded(int roomId,int amenityId)
+        {
+            return  await rooms.AddAmenityToRoom(roomId, amenityId);
+        }
+
+        [HttpDelete]
+        [Route("{roomId}/Amenity/{amenityId}")]
+        public async Task<RoomAmeneties> DeleteRoomaded(int roomId, int amenityId)
+        {
+            return await rooms.RemoveAmentityFromRoom(roomId, amenityId);
         }
     }
 }

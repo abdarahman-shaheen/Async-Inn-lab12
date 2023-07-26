@@ -16,15 +16,20 @@ namespace Async_Inn
             string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddDbContext<HotelDbContext>(options => options.UseSqlServer(connString));
-            builder.Services.AddControllers();
+           
             builder.Services.AddTransient<IHotel, HotelServices>();
             builder.Services.AddTransient<IRoom, RoomServices>();
             builder.Services.AddTransient<IAmenities, AminitiesServices>();
+            builder.Services.AddTransient<IHotelRoom, HotelRoomServices>();
 
+            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson(
+                option => option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
 
             var app = builder.Build();
-          
             app.MapControllers();
+
             app.MapGet("/", () => "Hello World!");
 
             app.Run();

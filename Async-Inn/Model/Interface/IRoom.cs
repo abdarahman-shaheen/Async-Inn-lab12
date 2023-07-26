@@ -7,6 +7,9 @@
         Task<Room> GetRoomId(int id);
         Task<Room> Update(int id,Room room);
         Task<Room> Delete(int id);
+
+        Task<RoomAmeneties> AddAmenityToRoom(int roomId, int amenityId);
+        Task<RoomAmeneties> RemoveAmentityFromRoom(int roomId, int amenityId);
     }   
 
 }
