@@ -52,7 +52,7 @@ namespace Async_Inn.Controller
 
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("hotelRoom")]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
             return await _hotel.Create(hotel);
