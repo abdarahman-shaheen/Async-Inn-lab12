@@ -1,4 +1,6 @@
-﻿namespace Async_Inn.Model
+﻿using System.Text.Json.Serialization;
+
+namespace Async_Inn.Model
 {
     public class HotelRoom
     {
@@ -8,8 +10,9 @@
         public decimal Rate { get; set; }
         public bool PetFriendly { get; set; }
 
-
-        public Hotel Hotel { get; set; }
-        public Room Room { get; set; }
+        
+        public Hotel? Hotel { get; set; }
+       
+        public Room? Room { get; set; }
     }
 }

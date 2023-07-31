@@ -21,10 +21,9 @@ namespace Async_Inn.Controller
         {
             _hoteRoom = _hoteRooms;
         }
-
         // GET: api/HotelRooms
         [HttpGet]
-        [Route("api/Hotels/{hotelId}/Rooms")]
+ 
         public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms()
         {
           return await _hoteRoom.GetHotelRooms();
@@ -40,16 +39,16 @@ namespace Async_Inn.Controller
 
         // PUT: api/HotelRooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("api/Hotels/{hotelId}/Rooms/{roomNumber}")]
-        public async Task<IActionResult> PutHotelRoom(int idHotel, int idRoom, HotelRoom hotelRoom)
+        [HttpPut("Hotel/{hotelId}/Room/{idRoom}")]
+        public async Task<IActionResult> PutHotelRoom(int hotelId, int idRoom, HotelRoom hotelRoom)
         {
-            return Ok(await _hoteRoom.Update(idHotel, idRoom, hotelRoom)) ;
+            return Ok(await _hoteRoom.Update(hotelId, idRoom, hotelRoom)) ;
             
         }
 
         // POST: api/HotelRooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("api/Hotels/{hotelId}/Rooms")]
+        [HttpPost]
         public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom)
         {
             return await _hoteRoom.Create(hotelRoom);
@@ -57,12 +56,13 @@ namespace Async_Inn.Controller
         }
 
         // DELETE: api/HotelRooms/5
-        [HttpDelete("api/Hotels/{hotelId}/Rooms/{roomNumber}")]
-        public async Task<IActionResult> DeleteHotelRoom(int idHotel, int idRoom)
+        [HttpDelete("Hotel/{hotelId}/Room/{idRoom}")]
+        public async Task<IActionResult> DeleteHotelRoom(int hotelId, int idRoom)
         {
-           return Ok(await _hoteRoom.Delete(idHotel, idRoom));
+            // return Ok(await _hoteRoom.Delete(hotelId, idRoom));
+            await _hoteRoom.Delete(hotelId, idRoom);
+            return NoContent();
         }
 
-       
     }
 }

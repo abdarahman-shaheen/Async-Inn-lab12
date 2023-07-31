@@ -1,6 +1,9 @@
 ﻿using Async_Inn.Data;
 using Async_Inn.Model.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Async_Inn.Model.Services
 {
@@ -13,49 +16,60 @@ namespace Async_Inn.Model.Services
             _context = context;
         }
 
-        public async Task<Hotel> Create(Hotel hotel)
-        {
-             _context.Hotels.Add(hotel);
-             await _context.SaveChangesAsync();
-             return hotel;
-        }
-
         public async Task<Hotel> Delete(int id)
         {
-            Hotel hotel =await GetHotelId(id);
-            _context.Entry(hotel).State = EntityState.Deleted;
-            await _context.SaveChangesAsync();
+            var hotel = await GetHotelId(id);
+            if (hotel != null)
+            {
+                _context.Hotels.Remove(hotel);
+                await _context.SaveChangesAsync();
+            }
             return hotel;
         }
 
         public async Task<Hotel> GetHotelId(int id)
         {
-           Hotel hotel = await _context.Hotels.FindAsync(id);
+            var hotel = await _context.Hotels.Where(h => h.Id == id).FirstOrDefaultAsync();
             return hotel;
-            
         }
 
         public async Task<List<Hotel>> GetHotels()
         {
-          
-            return await _context.Hotels.Include(x=>x.HotelRooms).ToListAsync();
+            var hotels = await _context.Hotels
+             .Include(h => h.HotelRooms)
+                .ToListAsync();
+            return hotels;
+        }
+
+        public bool HotelExists(int id)
+        {
+            var hotel = GetHotelId(id);
+            if (hotel != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<Hotel> Create(Hotel hotel)
+        {
+            _context.Hotels.Add(hotel);
+            await _context.SaveChangesAsync();
+            return hotel;
         }
 
         public async Task<Hotel> Update(int id, Hotel hotel)
         {
-
-            Hotel Temphotel = await GetHotelId(id);
-            Temphotel.Name=hotel.Name;
-            Temphotel.State = hotel.State;
-            Temphotel.Phone = hotel.Phone;
-            Temphotel.City= hotel.City;
-            Temphotel.Country= hotel.Country;
-            Temphotel.StreetAddres = hotel.StreetAddres;
-            
-
-            _context.Entry(Temphotel).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return Temphotel;
+            var hotelupdata = await GetHotelId(id);
+            if (hotelupdata != null)
+            {
+                hotelupdata.State = hotel.State;
+                hotelupdata.StreetAddres= hotel.StreetAddres;
+                hotelupdata.City = hotel.City;
+                hotelupdata.Phone = hotel.Phone;
+                await _context.SaveChangesAsync();
+            }
+            return hotelupdata;
         }
     }
 }

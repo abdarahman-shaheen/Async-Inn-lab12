@@ -35,7 +35,7 @@ namespace Async_Inn.Model.Services
 
         public async Task<List<Amenities>> GetAmenities()
         {
-            return await _context.Amenities.ToListAsync();
+            return await _context.Amenities.Include(x => x.RoomAmeneties).ToListAsync();
         }
 
         public async Task<Amenities> Update(int id,Amenities updateAmenites)

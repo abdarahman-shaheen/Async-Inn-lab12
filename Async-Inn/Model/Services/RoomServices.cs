@@ -31,7 +31,7 @@ namespace Async_Inn.Model.Services
 
         public async Task<Room> GetRoomId(int id)
         {
-           Room room = await _context.Rooms.Where(x=>x.Id== id).Include(x=>x.RoomAmeneties).FirstOrDefaultAsync();
+           Room room = await _context.Rooms.Where(x=>x.Id== id).Include(x=>x.RoomAmeneties).ThenInclude(r=>r.Ameneties).FirstOrDefaultAsync();
             return room;
         }
 
@@ -56,9 +56,14 @@ namespace Async_Inn.Model.Services
             RoomAmeneties roomAmeneties = new RoomAmeneties()
             {
                 RoomId = roomId,
-                AmenetiesId = amenityId
+                AmenetiesId = amenityId,
+           Room = await _context.Rooms.Where(x => x.Id == roomId).FirstOrDefaultAsync(),
+    Ameneties = await _context.Amenities.Where(x => x.Id == amenityId).FirstOrDefaultAsync()
+
+
             };
-            _context.Entry(roomAmeneties).State = EntityState.Added;
+
+            _context.RoomAmeneties.Add(roomAmeneties);  
 
            await _context.SaveChangesAsync();
 
