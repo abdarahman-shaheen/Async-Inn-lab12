@@ -9,6 +9,7 @@ using Async_Inn.Data;
 using Async_Inn.Model;
 using Async_Inn.Model.Interface;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Async_Inn.DTO;
 
 namespace Async_Inn.Controller
 {
@@ -25,7 +26,7 @@ namespace Async_Inn.Controller
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
           
             return await rooms.GetRooms();
@@ -33,7 +34,7 @@ namespace Async_Inn.Controller
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
             return await rooms.GetRoomId(id);
         }
@@ -43,19 +44,13 @@ namespace Async_Inn.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRoom(int id, Room room)
         {
-            if (id != room.Id)
-            {
-                return BadRequest();
-            }
-
-
             return Ok(await rooms.Update(id,room));
         }
 
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        public async Task<ActionResult<RoomDTO>> PostRoom(Room room)
         {
             return await rooms.Create(room);
         }
