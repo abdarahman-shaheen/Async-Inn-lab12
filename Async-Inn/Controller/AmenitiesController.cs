@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Async_Inn.Data;
 using Async_Inn.Model;
 using Async_Inn.Model.Interface;
+using Async_Inn.DTO;
 
 namespace Async_Inn.Controller
 {
@@ -24,7 +25,7 @@ namespace Async_Inn.Controller
 
         // GET: api/Amenities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Amenities>>> GetAmenities()
+        public async Task<ActionResult<IEnumerable<AmenityDTO>>> GetAmenities()
         {
    
             return await Amenety.GetAmenities();
@@ -32,7 +33,7 @@ namespace Async_Inn.Controller
 
         // GET: api/Amenities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Amenities>> GetAmenities(int id)
+        public async Task<ActionResult<AmenityDTO>> GetAmenities(int id)
         {
      
 
@@ -44,17 +45,14 @@ namespace Async_Inn.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAmenities(int id, Amenities amenities)
         {
-            if (id != amenities.Id)
-            {
-                return BadRequest();
-            }
+           
             return Ok(await Amenety.Update(id,amenities)) ;
         }
 
         // POST: api/Amenities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Amenities>> PostAmenities(Amenities amenities)
+        public async Task<ActionResult<AmenityDTO>> PostAmenities(Amenities amenities)
         {
             return await Amenety.Create(amenities);
         }
