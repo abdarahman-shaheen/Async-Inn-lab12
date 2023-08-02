@@ -37,7 +37,9 @@ namespace Async_Inn.Model.Services
         {
             RoomDTO roomDto = await GetRoomId(id);
             Room room = await _context.Rooms.Where(r => r.Id == id).FirstOrDefaultAsync();
-            _context.Entry(room).State = EntityState.Deleted;
+            _context.Rooms.Remove(room);
+            await _context.SaveChangesAsync();
+
 
             return roomDto;
 
@@ -45,30 +47,42 @@ namespace Async_Inn.Model.Services
 
         public async Task<RoomDTO> GetRoomId(int id)
         {
+            var Room = await _context.Rooms.Where(X => X.Id == id).FirstOrDefaultAsync();
 
-            return await _context.Rooms.Select(x => new RoomDTO
+
+            var RoomDto = await _context.Rooms.Select(x => new RoomDTO
             {
                 ID = id,
-                name = x.Name,
-                layout = x.Layout,
-            }).Where(f => f.ID == id).FirstOrDefaultAsync();
-
-            
-        }
-
-        public async Task<List<RoomDTO>> GetRooms()
-        {
-            return await _context.Rooms.Include(c => c.RoomAmeneties).Select(x => new RoomDTO
-            {
-                ID = x.Id,
-                name = x.Name,
-                layout = x.Layout,
+                name = Room.Name,
+                layout = Room.Layout,
                 Amenities = x.RoomAmeneties.Select(r => new AmenityDTO
                 {
                     ID = r.Ameneties.Id,
                     Name = r.Ameneties.Name,
                 }).ToList()
-            }).ToListAsync();
+            }).FirstOrDefaultAsync();
+
+            return RoomDto;
+        }
+
+        public async Task<List<RoomDTO>> GetRooms()
+        {
+
+            return await _context.Rooms
+      .Include(r => r.RoomAmeneties)
+      .ThenInclude(ra => ra.Ameneties)
+      .Select(x => new RoomDTO
+      {
+          ID = x.Id,
+          name = x.Name,
+          layout = x.Layout,
+          Amenities = x.RoomAmeneties.Select(h => new AmenityDTO
+          {
+              ID = h.Ameneties.Id,
+              Name = h.Ameneties.Name,
+          }).ToList()
+      })
+      .ToListAsync();
         }
 
         public async Task<RoomDTO> Update(int id, Room room)

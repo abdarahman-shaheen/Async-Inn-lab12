@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Async_Inn.Data;
 using Async_Inn.Model;
 using Async_Inn.Model.Interface;
+using Async_Inn.DTO;
 
 namespace Async_Inn.Controller
 {
@@ -24,7 +25,7 @@ namespace Async_Inn.Controller
 
         // GET: api/Hotels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
+        public async Task<ActionResult<IEnumerable<HotelDTO>>> GetHotels()
         {
      
             return await _hotel.GetHotels();
@@ -32,7 +33,7 @@ namespace Async_Inn.Controller
 
         // GET: api/Hotels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Hotel>> GetHotel(int id)
+        public async Task<ActionResult<HotelDTO>> GetHotel(int id)
         {
            return await _hotel.GetHotelId(id);
         }
@@ -42,18 +43,14 @@ namespace Async_Inn.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHotel(int id, Hotel hotel)
         {
-            if (id != hotel.Id)
-            {
-                return BadRequest();
-            }
 
             return Ok(await _hotel.Update(id,hotel)) ;
         }
 
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("hotelRoom")]
-        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
+        [HttpPost]
+        public async Task<ActionResult<HotelDTO>> PostHotel(Hotel hotel)
         {
             return await _hotel.Create(hotel);
         }
@@ -62,10 +59,7 @@ namespace Async_Inn.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotel(int id,Hotel hotel)
         {
-            if (id != hotel.Id)
-            {
-                return BadRequest();
-            }
+           
 
             return Ok(await _hotel.Delete(id));
         }

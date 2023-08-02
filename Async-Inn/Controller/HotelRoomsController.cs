@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Async_Inn.Data;
 using Async_Inn.Model;
 using Async_Inn.Model.Interface;
+using Async_Inn.DTO;
 
 namespace Async_Inn.Controller
 {
@@ -24,16 +25,16 @@ namespace Async_Inn.Controller
         // GET: api/HotelRooms
         [HttpGet]
  
-        public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms()
+        public async Task<ActionResult<IEnumerable<HotelRoomDTO>>> GetHotelRooms()
         {
           return await _hoteRoom.GetHotelRooms();
         }
 
         // GET: api/HotelRooms/5
-        [HttpGet("api/Hotels/{hotelId}/Rooms/{roomNumber}")]
-        public async Task<ActionResult<HotelRoom>> GetHotelRoom(int idHotel ,int idRoom)
+        [HttpGet("Hotels/{hotelId}/Rooms/{roomNumber}")]
+        public async Task<ActionResult<HotelRoomDTO>> GetHotelRoom(int hotelId, int roomNumber)
         {
-            return await _hoteRoom.GetHotelRoomId(idHotel , idRoom);
+            return await _hoteRoom.GetHotelRoomId(hotelId, roomNumber);
        
         }
 
@@ -42,14 +43,13 @@ namespace Async_Inn.Controller
         [HttpPut("Hotel/{hotelId}/Room/{idRoom}")]
         public async Task<IActionResult> PutHotelRoom(int hotelId, int idRoom, HotelRoom hotelRoom)
         {
-            return Ok(await _hoteRoom.Update(hotelId, idRoom, hotelRoom)) ;
-            
+            return Ok(await _hoteRoom.Update(hotelId, idRoom, hotelRoom)); 
         }
 
         // POST: api/HotelRooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom)
+        public async Task<ActionResult<HotelRoomDTO>> PostHotelRoom(HotelRoom hotelRoom)
         {
             return await _hoteRoom.Create(hotelRoom);
                 
@@ -57,11 +57,11 @@ namespace Async_Inn.Controller
 
         // DELETE: api/HotelRooms/5
         [HttpDelete("Hotel/{hotelId}/Room/{idRoom}")]
-        public async Task<IActionResult> DeleteHotelRoom(int hotelId, int idRoom)
+        public async Task<HotelRoomDTO> DeleteHotelRoom(int hotelId, int idRoom)
         {
             // return Ok(await _hoteRoom.Delete(hotelId, idRoom));
-            await _hoteRoom.Delete(hotelId, idRoom);
-            return NoContent();
+
+            return await _hoteRoom.Delete(hotelId, idRoom) ;
         }
 
     }
