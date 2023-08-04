@@ -81,27 +81,4 @@ It abstracts the underlying data storage (database) using Entity Framework Core 
 
 The `IHotel` `IRoom` `IAmenity` interfaces serves as a contract that any class representing a (hotel/room/amenity)   repository .
 By defining these methods in the interface, the application can achieve decoupling between the data access layer and the rest of the application, enabling flexible data storage implementations and improving testability and maintainability.
-## RoomAmenities routes:
-this are the routes for the roomamentiy  table:
- ``` 
-   [HttpPost("{roomId}/Amenity/{amenityId}")]
-       
-        public async Task<IActionResult> AddAmenityToRoom(int roomId, int amenityId)
-        {
-          
-            await _room.AddAmenityToRoom(roomId,amenityId);
 
-            return Ok();
-        }
-        [HttpDelete("{roomId}/Amenity/{amenityId}")]
-
-        public async Task<IActionResult> DeleteAmenityToRoom(int roomId, int amenityId)
-        {
-
-            await _room.DeleteAmenityToRoom(roomId, amenityId);
-
-            return Ok();
-        }
-    }
-    ```
-this routes were to add and delet form the table roomamentiy.
