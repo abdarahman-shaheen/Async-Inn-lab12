@@ -13,39 +13,56 @@ namespace Async_Inn.Model.Services
         {
             _context = context;
         }
-        public async Task<AmenityDTO> Create(Amenities aminity)
+
+        /// <summary>
+        /// Creates a new amenity and adds it to the database.
+        /// </summary>
+        /// <param name="amenity">The Amenity object to be created.</param>
+        /// <returns>An AmenityDTO representing the created amenity.</returns>
+        public async Task<AmenityDTO> Create(Amenities amenity)
         {
             AmenityDTO amenityDto = new AmenityDTO()
             {
-                ID=aminity.Id,
-                Name=aminity.Name,
+                ID = amenity.Id,
+                Name = amenity.Name,
             };
-            
-            _context.Amenities.Add(aminity);
-           await _context.SaveChangesAsync();
+            _context.Amenities.Add(amenity);
+            await _context.SaveChangesAsync();
             return amenityDto;
         }
+
+        /// <summary>
+        /// Deletes an amenity from the database based on the given id.
+        /// </summary>
+        /// <param name="id">The id of the amenity to be deleted.</param>
+        /// <returns>An AmenityDTO representing the deleted amenity.</returns>
         public async Task<AmenityDTO> Delete(int id)
         {
-            var aminty = await GetAmenitieId(id);
-            Amenities amenty = await _context.Amenities.Where(a => a.Id==aminty.ID).FirstOrDefaultAsync();
+            var amenity = await GetAmenitieId(id);
+            Amenities amenty = await _context.Amenities.Where(a => a.Id == amenity.ID).FirstOrDefaultAsync();
             _context.Entry(amenty).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
-            return aminty;
+            return amenity;
         }
 
+        /// <summary>
+        /// Retrieves a specific amenity from the database based on the given id.
+        /// </summary>
+        /// <param name="id">The id of the amenity to be retrieved.</param>
+        /// <returns>An AmenityDTO representing the retrieved amenity.</returns>
         public async Task<AmenityDTO> GetAmenitieId(int id)
         {
-
             return await _context.Amenities.Select(x => new AmenityDTO
             {
                 ID = x.Id,
                 Name = x.Name
             }).Where(x => x.ID == id).FirstOrDefaultAsync();
-
-            
         }
 
+        /// <summary>
+        /// Retrieves a list of all amenities from the database.
+        /// </summary>
+        /// <returns>A list of AmenityDTO, each representing an amenity.</returns>
         public async Task<List<AmenityDTO>> GetAmenities()
         {
             return await _context.Amenities.Select(x => new AmenityDTO
@@ -55,15 +72,21 @@ namespace Async_Inn.Model.Services
             }).ToListAsync();
         }
 
-        public async Task<AmenityDTO> Update(int id,Amenities updateAmenites)
+        /// <summary>
+        /// Updates the details of a specific amenity in the database based on the given id.
+        /// </summary>
+        /// <param name="id">The id of the amenity to be updated.</param>
+        /// <param name="updateAmenities">The updated Amenities object.</param>
+        /// <returns>An AmenityDTO representing the updated amenity.</returns>
+        public async Task<AmenityDTO> Update(int id, Amenities updateAmenities)
         {
-           var amenty = await GetAmenitieId(id);
-            Amenities amenity = await _context.Amenities.Where(a => a.Id == id).FirstOrDefaultAsync();
-            amenity.Name=updateAmenites.Name;
-            amenity.Id = id;
-            _context.Entry(amenity).State = EntityState.Modified;
+            var amenity = await GetAmenitieId(id);
+            Amenities amenities = await _context.Amenities.Where(a => a.Id == id).FirstOrDefaultAsync();
+            amenities.Name = updateAmenities.Name;
+            amenities.Id = id;
+            _context.Entry(amenities).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return amenty;
+            return amenity;
         }
     }
 }

@@ -13,6 +13,12 @@ namespace Async_Inn.Model.Services
         {
             _context = context;
         }
+
+        /// <summary>
+        /// Creates a new Room and adds it to the database.
+        /// </summary>
+        /// <param name="room">The Room object to be created.</param>
+        /// <returns>A RoomDTO representing the created room, including the amenities associated with it.</returns>
         public async Task<RoomDTO> Create(Room room)
         {
             var RoomDTO = new RoomDTO()
@@ -20,11 +26,13 @@ namespace Async_Inn.Model.Services
                 ID = room.Id,
                 name = room.Name,
                 layout = room.Layout,
-                 Amenities = _context.RoomAmeneties.Select(r => new AmenityDTO
-                {
-                    ID = r.Ameneties.Id,
-                    Name = r.Ameneties.Name,
-                }).ToList()
+                Amenities = _context.RoomAmeneties
+                    .Where(ra => ra.RoomId == room.Id)
+                    .Select(ra => new AmenityDTO
+                    {
+                        ID = ra.Ameneties.Id,
+                        Name = ra.Ameneties.Name,
+                    }).ToList()
 
             };
 
@@ -33,106 +41,122 @@ namespace Async_Inn.Model.Services
             return RoomDTO;
         }
 
+        /// <summary>
+        /// Deletes a Room from the database based on the given id.
+        /// </summary>
+        /// <param name="id">The id of the Room to be deleted.</param>
+        /// <returns>A RoomDTO representing the deleted room, including the amenities associated with it.</returns>
         public async Task<RoomDTO> Delete(int id)
         {
             RoomDTO roomDto = await GetRoomId(id);
-            Room room = await _context.Rooms.Where(r => r.Id == id).FirstOrDefaultAsync();
+            Room room = await _context.Rooms.FindAsync(id);
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
-
-
             return roomDto;
-
         }
 
+        /// <summary>
+        /// Retrieves a specific Room from the database based on the given id.
+        /// </summary>
+        /// <param name="id">The id of the Room to be retrieved.</param>
+        /// <returns>A RoomDTO representing the retrieved room, including the amenities associated with it.</returns>
         public async Task<RoomDTO> GetRoomId(int id)
         {
-            var Room = await _context.Rooms.Where(X => X.Id == id).FirstOrDefaultAsync();
+            var room = await _context.Rooms.FindAsync(id);
 
-
-            var RoomDto = await _context.Rooms.Select(x => new RoomDTO
+            var roomDto = new RoomDTO
             {
-                ID = id,
-                name = Room.Name,
-                layout = Room.Layout,
-                Amenities = x.RoomAmeneties.Select(r => new AmenityDTO
-                {
-                    ID = r.Ameneties.Id,
-                    Name = r.Ameneties.Name,
-                }).ToList()
-            }).FirstOrDefaultAsync();
+                ID = room.Id,
+                name = room.Name,
+                layout = room.Layout,
+                Amenities = _context.RoomAmeneties
+                    .Where(ra => ra.RoomId == room.Id)
+                    .Select(ra => new AmenityDTO
+                    {
+                        ID = ra.Ameneties.Id,
+                        Name = ra.Ameneties.Name,
+                    }).ToList()
+            };
 
-            return RoomDto;
+            return roomDto;
         }
 
+        /// <summary>
+        /// Retrieves a list of all Rooms from the database.
+        /// </summary>
+        /// <returns>A list of RoomDTO, each representing a room and including the amenities associated with it.</returns>
         public async Task<List<RoomDTO>> GetRooms()
         {
-
             return await _context.Rooms
-      .Include(r => r.RoomAmeneties)
-      .ThenInclude(ra => ra.Ameneties)
-      .Select(x => new RoomDTO
-      {
-          ID = x.Id,
-          name = x.Name,
-          layout = x.Layout,
-          Amenities = x.RoomAmeneties.Select(h => new AmenityDTO
-          {
-              ID = h.Ameneties.Id,
-              Name = h.Ameneties.Name,
-          }).ToList()
-      })
-      .ToListAsync();
+                .Include(r => r.RoomAmeneties)
+                .ThenInclude(ra => ra.Ameneties)
+                .Select(x => new RoomDTO
+                {
+                    ID = x.Id,
+                    name = x.Name,
+                    layout = x.Layout,
+                    Amenities = x.RoomAmeneties
+                        .Select(ra => new AmenityDTO
+                        {
+                            ID = ra.Ameneties.Id,
+                            Name = ra.Ameneties.Name,
+                        }).ToList()
+                })
+                .ToListAsync();
         }
 
+        /// <summary>
+        /// Updates the details of a specific Room in the database based on the given id.
+        /// </summary>
+        /// <param name="id">The id of the Room to be updated.</param>
+        /// <param name="room">The updated Room object.</param>
+        /// <returns>A RoomDTO representing the updated room, including the amenities associated with it.</returns>
         public async Task<RoomDTO> Update(int id, Room room)
         {
             RoomDTO roomDto = await GetRoomId(id);
 
-            Room Temproom = await _context.Rooms.Where(x => x.Id == id).FirstOrDefaultAsync();
-          
-            Temproom.Layout = room.Layout;
-            Temproom.Name = room.Name;
+            Room temproom = await _context.Rooms.FindAsync(id);
+            temproom.Layout = room.Layout;
+            temproom.Name = room.Name;
 
-            _context.Entry(Temproom).State = EntityState.Modified;
+            _context.Entry(temproom).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return roomDto;
-
-           
-           
-            
-            
         }
 
-
+        /// <summary>
+        /// Adds an Amenity to a specific Room in the database.
+        /// </summary>
+        /// <param name="roomId">The id of the Room to which the Amenity is to be added.</param>
+        /// <param name="amenityId">The id of the Amenity to be added.</param>
+        /// <returns>A RoomAmeneties object representing the relationship between the room and the added amenity.</returns>
         public async Task<RoomAmeneties> AddAmenityToRoom(int roomId, int amenityId)
         {
-            RoomAmeneties roomAmeneties = new RoomAmeneties()
+            RoomAmeneties RoomAmeneties = new RoomAmeneties()
             {
                 RoomId = roomId,
-                AmenetiesId = amenityId,
-                Room = await _context.Rooms.Where(x => x.Id == roomId).FirstOrDefaultAsync(),
-                Ameneties = await _context.Amenities.Where(x => x.Id == amenityId).FirstOrDefaultAsync()
-
-
+                AmenityId = amenityId
             };
 
-            _context.RoomAmeneties.Add(roomAmeneties);
-
+            _context.RoomAmeneties.Add(RoomAmeneties);
             await _context.SaveChangesAsync();
 
-            return roomAmeneties;
+            return RoomAmeneties;
         }
 
+        /// <summary>
+        /// Removes an Amenity from a specific Room in the database.
+        /// </summary>
+        /// <param name="roomId">The id of the Room from which the Amenity is to be removed.</param>
+        /// <param name="amenityId">The id of the Amenity to be removed.</param>
+        /// <returns>A RoomAmeneties object representing the relationship between the room and the removed amenity.</returns>
         public async Task<RoomAmeneties> RemoveAmentityFromRoom(int roomId, int amenityId)
         {
-            var roomameneties = await _context.RoomAmeneties.Where(x => x.RoomId == roomId && x.AmenetiesId == amenityId).FirstOrDefaultAsync();
-            _context.Entry(roomameneties).State = EntityState.Deleted;
+            var RoomAmeneties = await _context.RoomAmeneties.FindAsync(roomId, amenityId);
+            _context.RoomAmeneties.Remove(RoomAmeneties);
             await _context.SaveChangesAsync();
 
-            return roomameneties;
+            return RoomAmeneties;
         }
     }
 }
-
-
