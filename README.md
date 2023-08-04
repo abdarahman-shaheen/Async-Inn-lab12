@@ -82,5 +82,11 @@ It abstracts the underlying data storage (database) using Entity Framework Core 
 The `IHotel` `IRoom` `IAmenity` interfaces serves as a contract that any class representing a (hotel/room/amenity)   repository .
 By defining these methods in the interface, the application can achieve decoupling between the data access layer and the rest of the application, enabling flexible data storage implementations and improving testability and maintainability.
 
+-Test Service 
 ![diagram](https://github.com/abdarahman-shaheen/Async-Inn-lab12/blob/master/TestDatabaseHotel.png)
+
+
+-Swagger route 
+![diagram](https://github.com/abdarahman-shaheen/Async-Inn-lab12/blob/master/swaggers.png)
+
 
