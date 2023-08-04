@@ -12,22 +12,49 @@ namespace Async_Inn
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-          
-            string connString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-            builder.Services.AddDbContext<HotelDbContext>(options => options.UseSqlServer(connString));
-           
-           builder.Services.AddTransient<IHotel, HotelServices>();
-            builder.Services.AddTransient<IRoom, RoomServices>();
-            builder.Services.AddTransient<IAmenities, AminitiesServices>();
-            builder.Services.AddTransient<IHotelRoom, HotelRoomServices>();
 
             builder.Services.AddControllers();
             builder.Services.AddControllers().AddNewtonsoftJson(
                 option => option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
+
+
+          
+            string connString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+            builder.Services.AddDbContext<HotelDbContext>(options => options.UseSqlServer(connString));
+
+
+            builder.Services.AddTransient<IHotel, HotelServices>();
+            builder.Services.AddTransient<IRoom, RoomServices>();
+            builder.Services.AddTransient<IAmenities, AminitiesServices>();
+            builder.Services.AddTransient<IHotelRoom, HotelRoomServices>();
+            
+           builder.Services.AddSwaggerGen(option =>
+            {
+                option.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Title = "Hotel APi",
+                    Version="v1"
+
+                });
+            });
+           
+
+
+
             var app = builder.Build();
+            app.UseSwagger(option =>
+            {
+                option.RouteTemplate = "/api/{documentName}/swagger.json";
+            });
+            app.UseSwaggerUI(option => { 
+                option.SwaggerEndpoint("/api/v1/swagger.json", "School API");
+                option.RoutePrefix = "docs";
+            });
+            
+
             app.MapControllers();
 
             app.MapGet("/", () => "Hello World!");
