@@ -86,7 +86,7 @@ namespace Async_Inn.Model.Services
         {
             return await _context.HotelRooms
                 .Include(hr => hr.Hotel)
-                .Include(hr => hr.Room).ThenInclude(r => r.RoomAmenities).ThenInclude(ra => ra.Amenity)
+                .Include(hr => hr.Room).ThenInclude(r => r.RoomAmeneties).ThenInclude(ra => ra.Ameneties)
                 .Select(x => new HotelRoomDTO
                 {
                     HotelID = x.HotelId,
@@ -98,10 +98,10 @@ namespace Async_Inn.Model.Services
                     {
                         ID = x.Room.Id,
                         name = x.Room.Name,
-                        Amenities = x.Room.RoomAmenities.Select(ra => new AmenityDTO
+                        Amenities = x.Room.RoomAmeneties.Select(ra => new AmenityDTO
                         {
-                            ID = ra.Amenity.Id,
-                            Name = ra.Amenity.Name
+                            ID = ra.Ameneties.Id,
+                            Name = ra.Ameneties.Name
                         }).ToList()
                     }
                 })

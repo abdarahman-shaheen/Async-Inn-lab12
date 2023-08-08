@@ -135,7 +135,7 @@ namespace Async_Inn.Model.Services
             RoomAmeneties RoomAmeneties = new RoomAmeneties()
             {
                 RoomId = roomId,
-                AmenityId = amenityId
+                AmenetiesId = amenityId
             };
 
             _context.RoomAmeneties.Add(RoomAmeneties);
