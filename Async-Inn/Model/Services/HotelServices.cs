@@ -81,10 +81,10 @@ namespace Async_Inn.Model.Services
                             ID = hr.Room.Id,
                             name = hr.Room.Name,
                             layout = hr.Room.Layout,
-                            Amenities = hr.Room.RoomAmenities.Select(ra => new AmenityDTO
+                            Amenities = hr.Room.RoomAmeneties.Select(ra => new AmenityDTO
                             {
-                                ID = ra.Amenities.Id,
-                                Name = ra.Amenities.Name
+                                ID = ra.Ameneties.Id,
+                                Name = ra.Ameneties.Name
                             }).ToList()
                         }
                     }).ToList()

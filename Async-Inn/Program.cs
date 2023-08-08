@@ -2,7 +2,7 @@ using Async_Inn.Data;
 using Async_Inn.Model;
 using Async_Inn.Model.Interface;
 using Async_Inn.Model.Services;
-
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Async_Inn
@@ -20,18 +20,23 @@ namespace Async_Inn
 
 
 
-          
+
             string connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddDbContext<HotelDbContext>(options => options.UseSqlServer(connString));
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+            {
+                option.User.RequireUniqueEmail = true;
 
+            }).AddEntityFrameworkStores<HotelDbContext>();
 
             builder.Services.AddTransient<IHotel, HotelServices>();
             builder.Services.AddTransient<IRoom, RoomServices>();
             builder.Services.AddTransient<IAmenities, AminitiesServices>();
             builder.Services.AddTransient<IHotelRoom, HotelRoomServices>();
-            
-           builder.Services.AddSwaggerGen(option =>
+            builder.Services.AddTransient<IUser,IdentityUserServices>();
+
+            builder.Services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
                 {
