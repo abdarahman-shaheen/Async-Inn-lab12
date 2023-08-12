@@ -4,6 +4,7 @@ using Async_Inn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Async_Inn.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230812174756_AddRoles")]
+    partial class AddRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -298,31 +301,17 @@ namespace Async_Inn.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "district manager",
+                            Id = "admin",
                             ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
-                            Name = "District Manager",
-                            NormalizedName = "DISTRICT MANAGER"
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "property manager",
+                            Id = "user",
                             ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
-                            Name = "Property Manager",
-                            NormalizedName = "PROPERTY MANAGER"
-                        },
-                        new
-                        {
-                            Id = "agent",
-                            ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
-                            Name = "Agent",
-                            NormalizedName = "AGENT"
-                        },
-                        new
-                        {
-                            Id = "anonymous users",
-                            ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
-                            Name = "Anonymous users",
-                            NormalizedName = "ANONYMOUS USERS"
+                            Name = "User",
+                            NormalizedName = "USER"
                         });
                 });
 

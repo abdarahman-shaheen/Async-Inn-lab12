@@ -1,5 +1,6 @@
 ﻿using Async_Inn.DTO;
 using Async_Inn.Model.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace Async_Inn.Controller
         {
             userService = service;
         }
-
+        //   //      [Authorize(Roles = "District Manager")]
         [HttpPost("Register")]
         public async Task<ActionResult<UserDTO>> Register(RegisterUserDTO data)
         {
@@ -40,6 +41,13 @@ namespace Async_Inn.Controller
                 return Unauthorized();
             }
             return user;
+        }
+
+        //   [Authorize(Roles ="Admin")]
+        [HttpGet("Profile")]
+        public async Task<ActionResult<UserDTO>> Profile()
+        {
+            return await userService.GetUser(this.User);
         }
     }
 }
