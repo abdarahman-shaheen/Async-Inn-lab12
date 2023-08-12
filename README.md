@@ -82,6 +82,13 @@ It abstracts the underlying data storage (database) using Entity Framework Core 
 The `IHotel` `IRoom` `IAmenity` interfaces serves as a contract that any class representing a (hotel/room/amenity)   repository .
 By defining these methods in the interface, the application can achieve decoupling between the data access layer and the rest of the application, enabling flexible data storage implementations and improving testability and maintainability.
 
+## Roles :
+this is the part that spreates between the user (Agents ) and the property mangers and the district manger and shows wat can thety access and what can they do :
+for example : district manger can do all the opreations on the api as he has the full accesson the controllers
+the property manager can add/update/read new HotelRooms to hotels, and amenities to rooms.
+the  agent can only update/read a HotelRoom and add/delete amenities to rooms.
+so the agent "can't" delete a hotelRoom . as he is only an agent . 
+
 -Test Service 
 ![diagram](https://github.com/abdarahman-shaheen/Async-Inn-lab12/blob/master/TestDatabaseHotel.png)
 
