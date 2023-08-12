@@ -10,9 +10,11 @@ using Async_Inn.Model;
 using Async_Inn.Model.Interface;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Async_Inn.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Async_Inn.Controller
 {
+    [Authorize(Roles = "District Manager")]
     [Route("api/[controller]")]
     [ApiController]
     public class RoomsController : ControllerBase
@@ -25,6 +27,8 @@ namespace Async_Inn.Controller
         }
 
         // GET: api/Rooms
+        [AllowAnonymous]
+        [Authorize(Roles = "Anonymous users")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
@@ -33,6 +37,8 @@ namespace Async_Inn.Controller
         }
 
         // GET: api/Rooms/5
+        [AllowAnonymous]
+        [Authorize(Roles = "Anonymous users")]
         [HttpGet("{id}")]
         public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
@@ -41,6 +47,7 @@ namespace Async_Inn.Controller
 
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [AllowAnonymous]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRoom(int id, Room room)
         {

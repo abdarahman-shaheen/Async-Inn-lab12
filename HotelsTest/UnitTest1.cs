@@ -122,7 +122,6 @@ namespace HotelsTest
             Assert.NotNull(updatedHotel);
             Assert.Equal("Updated Hotel", updatedHotel.Name);
            Assert.Equal("Updated City", updatedHotel.City);
-
         }
 
         [Fact]

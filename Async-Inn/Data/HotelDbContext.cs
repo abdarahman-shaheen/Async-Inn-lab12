@@ -1,4 +1,5 @@
 ﻿using Async_Inn.Model;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +38,34 @@ namespace Async_Inn.Data
             modelBuilder.Entity<HotelRoom>().HasKey(
                roomamanites => new { roomamanites.HotelId, roomamanites.RoomNumber }
                );
+            SeedRole(modelBuilder, "District Manager");
+            SeedRole(modelBuilder, "Property Manager");
+            SeedRole(modelBuilder, "Agent");
+            SeedRole(modelBuilder, "Anonymous users");
         }
+
+
+        int nextid = 1;
+        private void SeedRole(ModelBuilder model,string roleName,params string[] permisstion)
+        {
+            var roles = new IdentityRole
+            {
+                Id =roleName.ToLower(),
+                Name= roleName,
+                NormalizedName= roleName.ToUpper(),
+                ConcurrencyStamp =Guid.Empty.ToString()
+            };
+            model.Entity<IdentityRole>().HasData( roles );
+            var RoleClamis = permisstion.Select(permistion => new IdentityRoleClaim<string>
+            {
+                Id = nextid++,
+                RoleId=roles.Id,
+                ClaimType="Permisstion",
+                ClaimValue=permistion
+            });
+            model.Entity<IdentityRoleClaim<string>>().HasData( RoleClamis );
+        }
+        
 
 
         public DbSet<Hotel> Hotels { get; set; }

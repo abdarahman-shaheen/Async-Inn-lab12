@@ -2,7 +2,9 @@ using Async_Inn.Data;
 using Async_Inn.Model;
 using Async_Inn.Model.Interface;
 using Async_Inn.Model.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Async_Inn
@@ -30,11 +32,29 @@ namespace Async_Inn
 
             }).AddEntityFrameworkStores<HotelDbContext>();
 
+
             builder.Services.AddTransient<IHotel, HotelServices>();
             builder.Services.AddTransient<IRoom, RoomServices>();
             builder.Services.AddTransient<IAmenities, AminitiesServices>();
             builder.Services.AddTransient<IHotelRoom, HotelRoomServices>();
             builder.Services.AddTransient<IUser,IdentityUserServices>();
+            builder.Services.AddScoped<JWTTokenServices>();
+
+            builder.Services.AddAuthentication
+                (options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                }).AddJwtBearer(option =>
+                {
+                    option.TokenValidationParameters = JWTTokenServices.GetValidationParameters(builder.Configuration);
+                });
+            builder.Services.AddAuthorization(option =>
+            {
+                option.AddPolicy("Create", policy => policy.RequireClaim("Permisstion", "Create"));
+                option.AddPolicy("Update", policy => policy.RequireClaim("Permisstion", "Update"));
+            }
+
+            );
 
             builder.Services.AddSwaggerGen(option =>
             {
@@ -58,6 +78,9 @@ namespace Async_Inn
                 option.SwaggerEndpoint("/api/v1/swagger.json", "School API");
                 option.RoutePrefix = "docs";
             });
+
+            app.UseAuthentication();
+            app.UseAuthorization();
             
 
             app.MapControllers();
